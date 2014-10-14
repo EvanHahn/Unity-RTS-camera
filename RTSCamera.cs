@@ -12,7 +12,12 @@ public class RTSCamera : MonoBehaviour {
 	private Vector3 lookOrigin;
 	
 	void Update() {
+		updateDragging();
+		updateLook();
+		updateSelect();
+	}
 
+	private void updateDragging() {
 		for (int index = 0; index <= 1; index ++) {
 			if (isClicking(index) && !isDragging[index]) {
 				isDragging[index] = true;
@@ -20,16 +25,12 @@ public class RTSCamera : MonoBehaviour {
 				isDragging[index] = false;
 			}
 		}
-
-		updateLook();
-		updateSelect();
-
 	}
 
 	private void updateLook() {
 		if (!isDragging[0]) { return; }
 		var newPosition = transform.position;
-		var mousePosition = getMouseCoordinates();
+		var mousePosition = getMouseMovement();
 		newPosition.x = newPosition.x - mousePosition.x;
 		newPosition.y = newPosition.y - mousePosition.y;
 		transform.position = newPosition;
@@ -43,7 +44,7 @@ public class RTSCamera : MonoBehaviour {
 		return Input.GetAxis(INPUT_MOUSE_BUTTONS[index]) == 1;
 	}
 
-	private Vector2 getMouseCoordinates() {
+	private Vector2 getMouseMovement() {
 		return new Vector2(Input.GetAxis(INPUT_MOUSE_X), Input.GetAxis(INPUT_MOUSE_Y));
 	}
 
