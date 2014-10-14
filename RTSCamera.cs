@@ -10,14 +10,12 @@ public class RTSCamera : MonoBehaviour {
 	private bool[] isDragging = new bool[2];
 	private Vector2[] dragOrigins = new Vector2[2];
 	private Vector3 lookOrigin;
-
+	
 	void Update() {
 
 		for (int index = 0; index <= 1; index ++) {
 			if (isClicking(index) && !isDragging[index]) {
 				isDragging[index] = true;
-				dragOrigins[index] = getMouseCoordinates();
-				if (index == 0) { lookOrigin = transform.position; }
 			} else if (!isClicking(index) && isDragging[index]) {
 				isDragging[index] = false;
 			}
@@ -30,11 +28,10 @@ public class RTSCamera : MonoBehaviour {
 
 	private void updateLook() {
 		if (!isDragging[0]) { return; }
-		var origin = dragOrigins[0];
 		var newPosition = transform.position;
 		var mousePosition = getMouseCoordinates();
-		newPosition.x = lookOrigin.x + (origin.x - mousePosition.x);
-		newPosition.y = lookOrigin.y + (origin.y - mousePosition.y);
+		newPosition.x = newPosition.x - mousePosition.x;
+		newPosition.y = newPosition.y - mousePosition.y;
 		transform.position = newPosition;
 	}
 
