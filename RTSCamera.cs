@@ -27,7 +27,7 @@ public class RTSCamera : MonoBehaviour {
 			if (isClicking(index) && !isDragging[index]) {
 				isDragging[index] = true;
 				if (index == 1) {
-					selectStartPosition = Input.mousePosition;
+					selectStartPosition = getMousePosition();
 				}
 			} else if (!isClicking(index) && isDragging[index]) {
 				isDragging[index] = false;
@@ -46,7 +46,7 @@ public class RTSCamera : MonoBehaviour {
 
 	private void updateSelect() {
 		if (!isDragging[1]) { return; }
-		drawRectangle(selectStartPosition, Input.mousePosition);
+		drawRectangle(selectStartPosition, getMousePosition());
 	}
 
 	private bool isClicking(int index) {
@@ -61,7 +61,7 @@ public class RTSCamera : MonoBehaviour {
 		var x = cornerA.x;
 		var y = cornerA.y;
 		var width = cornerB.x - cornerA.x;
-		var height = -(cornerB.y - cornerA.y);
+		var height = cornerB.y - cornerA.y;
 		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
 		GUI.DrawTexture(new Rect(x, y, 1, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, 1), pixel);
@@ -73,6 +73,12 @@ public class RTSCamera : MonoBehaviour {
 		pixel = new Texture2D(1, 1);
 		pixel.SetPixel(0, 0, color);
 		pixel.Apply();
+	}
+
+	private Vector3 getMousePosition() {
+		var result = Input.mousePosition;
+		result.y = Screen.height - result.y;
+		return result;
 	}
 
 }
