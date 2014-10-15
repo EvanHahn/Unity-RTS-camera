@@ -3,6 +3,8 @@ using System.Collections;
 
 public class RTSCamera : MonoBehaviour {
 
+	public bool disablePanning = false;
+	public bool disableSelect = false;
 	public Color selectColor = Color.green;
 	public float selectLineWidth = 2f;
 	
@@ -39,7 +41,7 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void updateLook() {
-		if (!isDragging[0]) { return; }
+		if (!isDragging[0] || disablePanning) { return; }
 		var newPosition = transform.position;
 		var mousePosition = getMouseMovement();
 		newPosition.x = newPosition.x - mousePosition.x;
@@ -48,7 +50,7 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void updateSelect() {
-		if (!isDragging[1]) { return; }
+		if (!isDragging[1] || disableSelect) { return; }
 		var x = selectStartPosition.x;
 		var y = selectStartPosition.y;
 		var width = getMousePosition().x - selectStartPosition.x;
