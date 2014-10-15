@@ -4,6 +4,7 @@ using System.Collections;
 public class RTSCamera : MonoBehaviour {
 
 	public Color selectColor = Color.green;
+	public float selectLineWidth = 2f;
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
 	
@@ -52,10 +53,10 @@ public class RTSCamera : MonoBehaviour {
 		var y = selectStartPosition.y;
 		var width = getMousePosition().x - selectStartPosition.x;
 		var height = getMousePosition().y - selectStartPosition.y;
-		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
-		GUI.DrawTexture(new Rect(x, y, 1, height), pixel);
-		GUI.DrawTexture(new Rect(x, y + height, width, 1), pixel);
-		GUI.DrawTexture(new Rect(x + width, y, 1, height), pixel);
+		GUI.DrawTexture(new Rect(x, y, width, selectLineWidth), pixel);
+		GUI.DrawTexture(new Rect(x, y, selectLineWidth, height), pixel);
+		GUI.DrawTexture(new Rect(x, y + height, width, selectLineWidth), pixel);
+		GUI.DrawTexture(new Rect(x + width, y, selectLineWidth, height), pixel);
 		GUI.DrawTexture(new Rect(x + width - 3, y + height - 3, 6, 6), pixel);
 	}
 
