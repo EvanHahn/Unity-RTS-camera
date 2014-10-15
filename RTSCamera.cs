@@ -5,10 +5,14 @@ public class RTSCamera : MonoBehaviour {
 
 	public bool disablePanning = false;
 	public bool disableSelect = false;
+	public bool disableZoom = false;
+
 	public float maximumZoom = 1f;
 	public float minimumZoom = 20f;
 	public Color selectColor = Color.green;
 	public float selectLineWidth = 2f;
+
+	public float lookDamper = 5f;
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
 	
@@ -50,8 +54,8 @@ public class RTSCamera : MonoBehaviour {
 		if (!isDragging[0] || disablePanning) { return; }
 		var newPosition = transform.position;
 		var mousePosition = getMouseMovement();
-		newPosition.x = newPosition.x - mousePosition.x;
-		newPosition.y = newPosition.y - mousePosition.y;
+		newPosition.x = newPosition.x - (mousePosition.x * camera.orthographicSize / lookDamper);
+		newPosition.y = newPosition.y - (mousePosition.y * camera.orthographicSize / lookDamper);
 		transform.position = newPosition;
 	}
 
@@ -68,6 +72,7 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void updateZoom() {
+		if (disableZoom) { return; }
 		var newSize = camera.orthographicSize - Input.GetAxis("Mouse ScrollWheel");
 		newSize = Mathf.Clamp(newSize, maximumZoom, minimumZoom);
 		camera.orthographicSize = newSize;
