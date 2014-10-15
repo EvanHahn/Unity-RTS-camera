@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class RTSCamera : MonoBehaviour {
+
+	public Color selectColor = Color.green;
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
 	
@@ -10,7 +12,7 @@ public class RTSCamera : MonoBehaviour {
 	private Texture2D pixel;
 
 	void Start() {
-		setPixel(Color.green);
+		setPixel(selectColor);
 	}
 	
 	void Update() {
