@@ -57,7 +57,6 @@ public class RTSCamera : MonoBehaviour {
 		GUI.DrawTexture(new Rect(x, y, selectLineWidth, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, selectLineWidth), pixel);
 		GUI.DrawTexture(new Rect(x + width, y, selectLineWidth, height), pixel);
-		GUI.DrawTexture(new Rect(x + width - 3, y + height - 3, 6, 6), pixel);
 	}
 
 	private bool isClicking(int index) {
