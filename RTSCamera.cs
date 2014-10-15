@@ -61,11 +61,12 @@ public class RTSCamera : MonoBehaviour {
 		var x = cornerA.x;
 		var y = cornerA.y;
 		var width = cornerB.x - cornerA.x;
-		var height = cornerB.y - cornerA.y;
+		var height = -(cornerB.y - cornerA.y);
 		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
 		GUI.DrawTexture(new Rect(x, y, 1, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, 1), pixel);
 		GUI.DrawTexture(new Rect(x + width, y, 1, height), pixel);
+		GUI.DrawTexture(new Rect(x + width - 3, y + height - 3, 6, 6), pixel);
 	}
 
 	private void setPixel(Color color) {
