@@ -46,7 +46,15 @@ public class RTSCamera : MonoBehaviour {
 
 	private void updateSelect() {
 		if (!isDragging[1]) { return; }
-		drawRectangle(selectStartPosition, getMousePosition());
+		var x = selectStartPosition.x;
+		var y = selectStartPosition.y;
+		var width = getMousePosition().x - selectStartPosition.x;
+		var height = getMousePosition().y - selectStartPosition.y;
+		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
+		GUI.DrawTexture(new Rect(x, y, 1, height), pixel);
+		GUI.DrawTexture(new Rect(x, y + height, width, 1), pixel);
+		GUI.DrawTexture(new Rect(x + width, y, 1, height), pixel);
+		GUI.DrawTexture(new Rect(x + width - 3, y + height - 3, 6, 6), pixel);
 	}
 
 	private bool isClicking(int index) {
@@ -55,18 +63,6 @@ public class RTSCamera : MonoBehaviour {
 
 	private Vector2 getMouseMovement() {
 		return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-	}
-
-	private void drawRectangle(Vector3 cornerA, Vector3 cornerB) {
-		var x = cornerA.x;
-		var y = cornerA.y;
-		var width = cornerB.x - cornerA.x;
-		var height = cornerB.y - cornerA.y;
-		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
-		GUI.DrawTexture(new Rect(x, y, 1, height), pixel);
-		GUI.DrawTexture(new Rect(x, y + height, width, 1), pixel);
-		GUI.DrawTexture(new Rect(x + width, y, 1, height), pixel);
-		GUI.DrawTexture(new Rect(x + width - 3, y + height - 3, 6, 6), pixel);
 	}
 
 	private void setPixel(Color color) {
