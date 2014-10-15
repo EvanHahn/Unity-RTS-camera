@@ -5,6 +5,8 @@ public class RTSCamera : MonoBehaviour {
 
 	public bool disablePanning = false;
 	public bool disableSelect = false;
+	public float maximumZoom = 1f;
+	public float minimumZoom = 20f;
 	public Color selectColor = Color.green;
 	public float selectLineWidth = 2f;
 	
@@ -24,6 +26,7 @@ public class RTSCamera : MonoBehaviour {
 	void Update() {
 		updateDragging();
 		updateLook();
+		updateZoom();
 	}
 
 	void OnGUI() {
@@ -62,6 +65,12 @@ public class RTSCamera : MonoBehaviour {
 		GUI.DrawTexture(new Rect(x, y, selectLineWidth, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, selectLineWidth), pixel);
 		GUI.DrawTexture(new Rect(x + width, y, selectLineWidth, height), pixel);
+	}
+
+	private void updateZoom() {
+		var newSize = camera.orthographicSize - Input.GetAxis("Mouse ScrollWheel");
+		newSize = Mathf.Clamp(newSize, maximumZoom, minimumZoom);
+		camera.orthographicSize = newSize;
 	}
 
 	private bool isClicking(int index) {
