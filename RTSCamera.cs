@@ -13,6 +13,7 @@ public class RTSCamera : MonoBehaviour {
 	public float selectLineWidth = 2f;
 
 	public float lookDamper = 5f;
+	public string onSelectMessageName = "OnRTSSelect";
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
 	
