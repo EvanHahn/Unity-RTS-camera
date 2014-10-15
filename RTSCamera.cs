@@ -59,7 +59,7 @@ public class RTSCamera : MonoBehaviour {
 
 	private void drawRectangle(Vector3 cornerA, Vector3 cornerB) {
 		var x = cornerA.x;
-		var y = cornerB.y;
+		var y = cornerA.y;
 		var width = cornerB.x - cornerA.x;
 		var height = cornerB.y - cornerA.y;
 		GUI.DrawTexture(new Rect(x, y, width, 1), pixel);
