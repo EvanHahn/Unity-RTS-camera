@@ -15,6 +15,9 @@ public class RTSCamera : MonoBehaviour {
 	private Texture2D pixel;
 
 	void Start() {
+		if (!camera) {
+			throw new MissingComponentException("RTS Camera must be attached to a camera.");
+		}
 		setPixel(selectColor);
 	}
 	
