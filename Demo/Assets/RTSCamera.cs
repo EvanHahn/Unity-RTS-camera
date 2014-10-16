@@ -13,22 +13,25 @@ public class RTSCamera : MonoBehaviour {
 	public float selectLineWidth = 2f;
 
 	public float lookDamper = 5f;
-	public string onSelectMessageName = "OnRTSSelect";
+	public string selectionObjectName = "RTS Selection";
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
 	private bool ready;
 	private bool[] isDragging = new bool[2];
 	private Vector3 selectStartPosition;
 	private Texture2D pixel;
+	private System.Collections.IList<Object> selectionsToDestroy;
 
 	void Start() {
 		try {
 			startupChecks();
-			setPixel(selectColor);
 			ready = true;
-		} catch (UnityException ex) {
+		} catch (UnityException exception) {
 			ready = false;
+			throw exception;
 		}
+		setPixel(selectColor);
+		selectionsToDestroy = new System.Collections.ArrayList<Object>();
 	}
 	
 	void Update() {
@@ -52,6 +55,9 @@ public class RTSCamera : MonoBehaviour {
 				}
 			} else if (!isClicking(index) && isDragging[index]) {
 				isDragging[index] = false;
+				if (index == 1) {
+					dropSelection(selectStartPosition, getMousePosition());
+				}
 			}
 		}
 	}
@@ -85,7 +91,7 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private bool isClicking(int index) {
-		return Input.GetAxis(INPUT_MOUSE_BUTTONS[index]) == 1;
+		return Input.GetAxis(INPUT_MOUSE_BUTTONS[index]) == 1f;
 	}
 
 	private Vector2 getMouseMovement() {
@@ -111,9 +117,31 @@ public class RTSCamera : MonoBehaviour {
 		try {
 			Input.GetAxis(INPUT_MOUSE_BUTTONS[0]);
 			Input.GetAxis(INPUT_MOUSE_BUTTONS[1]);
-		} catch (UnityException ex) {
+		} catch (UnityException) {
 			throw new UnassignedReferenceException("Inputs " + INPUT_MOUSE_BUTTONS[0] + " and " +
 			                                       INPUT_MOUSE_BUTTONS[1] + " must be defined.");
+		}
+	}
+
+	private void dropSelection(Vector3 screenStart, Vector3 screenEnd) {
+		var newSelection = new GameObject(selectionObjectName);
+		var collider = newSelection.AddComponent<BoxCollider>() as BoxCollider;
+		var start = camera.ScreenToWorldPoint(screenStart);
+		var finish = camera.ScreenToViewportPoint(screenEnd);
+		var selectionPosition = new Vector3(Mathf.Min(start.x, finish.x),
+		                                    Mathf.Min(start.y, finish.y),
+		                                    0.5f);
+		collider.size = new Vector3(Mathf.Max(start.x, finish.x) - selectionPosition.x,
+		                            Mathf.Max(start.y, finish.y) - selectionPosition.y,
+		                            0.1f);
+		var selection = Instantiate(newSelection, selectionPosition, Quaternion.identity);
+		selectionsToDestroy.Add(selection);
+		Invoke("destroySelections", 0.1f);
+	}
+
+	private void destroySelections() {
+		foreach (var selection in selectionsToDestroy) {
+			Destroy(selection);
 		}
 	}
 
