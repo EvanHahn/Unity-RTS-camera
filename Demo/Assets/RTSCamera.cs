@@ -125,13 +125,25 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void dropSelection(Vector3 screenStart, Vector3 screenEnd) {
+		if (!selection) {
+			selection = new GameObject(selectionObjectName);
+			{
+				var collider = selection.AddComponent<BoxCollider>() as BoxCollider;
+				collider.isTrigger = true;
+				var size = collider.size;
+				size.z = 1000000f; // super friggin tall
+				collider.size = size;
+			}
+			{
+				var body = selection.AddComponent<Rigidbody>() as Rigidbody;
+				body.useGravity = false;
+			}
+		}
 		{
-			if (selection) { Destroy(selection); }
 			var start = camera.ScreenToWorldPoint(screenStart -
 				new Vector3(0, -(Screen.height + screenStart.y), 0));
 			var finish = camera.ScreenToViewportPoint(screenEnd -
 				new Vector3(0, -(Screen.height + screenStart.y), 0));
-			selection = new GameObject(selectionObjectName);
 			selection.transform.position = new Vector3(
 				Mathf.Min(start.x, finish.x),
 				Mathf.Min(start.y, finish.y),
@@ -140,17 +152,6 @@ public class RTSCamera : MonoBehaviour {
 				Mathf.Max(start.x, finish.x) - selection.transform.position.x,
 				Mathf.Max(start.y, finish.y) - selection.transform.position.y,
 				0.5f);
-		}
-		{
-			var collider = selection.AddComponent<BoxCollider>() as BoxCollider;
-			collider.isTrigger = true;
-			var size = collider.size;
-			size.z = 1000000f; // super friggin tall
-			collider.size = size;
-		}
-		{
-			var body = selection.AddComponent<Rigidbody>() as Rigidbody;
-			body.useGravity = false;
 		}
 	}
 
