@@ -20,7 +20,8 @@ public class RTSCamera : MonoBehaviour {
 	private bool[] isDragging = new bool[2];
 	private Vector3 selectStartPosition;
 	private Texture2D pixel;
-	private System.Collections.IList<Object> selectionsToDestroy;
+	private GameObject selection;
+	private bool debugSelection;
 
 	void Start() {
 		try {
@@ -31,7 +32,7 @@ public class RTSCamera : MonoBehaviour {
 			throw exception;
 		}
 		setPixel(selectColor);
-		selectionsToDestroy = new System.Collections.ArrayList<Object>();
+		debugSelection = true;
 	}
 	
 	void Update() {
@@ -124,24 +125,32 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void dropSelection(Vector3 screenStart, Vector3 screenEnd) {
-		var newSelection = new GameObject(selectionObjectName);
-		var collider = newSelection.AddComponent<BoxCollider>() as BoxCollider;
-		var start = camera.ScreenToWorldPoint(screenStart);
-		var finish = camera.ScreenToViewportPoint(screenEnd);
-		var selectionPosition = new Vector3(Mathf.Min(start.x, finish.x),
-		                                    Mathf.Min(start.y, finish.y),
-		                                    0.5f);
-		collider.size = new Vector3(Mathf.Max(start.x, finish.x) - selectionPosition.x,
-		                            Mathf.Max(start.y, finish.y) - selectionPosition.y,
-		                            0.1f);
-		var selection = Instantiate(newSelection, selectionPosition, Quaternion.identity);
-		selectionsToDestroy.Add(selection);
-		Invoke("destroySelections", 0.1f);
-	}
-
-	private void destroySelections() {
-		foreach (var selection in selectionsToDestroy) {
-			Destroy(selection);
+		{
+			if (selection) { Destroy(selection); }
+			var start = camera.ScreenToWorldPoint(screenStart -
+				new Vector3(0, -(Screen.height + screenStart.y), 0));
+			var finish = camera.ScreenToViewportPoint(screenEnd -
+				new Vector3(0, -(Screen.height + screenStart.y), 0));
+			selection = new GameObject(selectionObjectName);
+			selection.transform.position = new Vector3(
+				Mathf.Min(start.x, finish.x),
+				Mathf.Min(start.y, finish.y),
+				0.5f);
+			selection.transform.localScale = new Vector3(
+				Mathf.Max(start.x, finish.x) - selection.transform.position.x,
+				Mathf.Max(start.y, finish.y) - selection.transform.position.y,
+				0.5f);
+		}
+		{
+			var collider = selection.AddComponent<BoxCollider>() as BoxCollider;
+			collider.isTrigger = true;
+			var size = collider.size;
+			size.z = 1000000f; // super friggin tall
+			collider.size = size;
+		}
+		{
+			var body = selection.AddComponent<Rigidbody>() as Rigidbody;
+			body.useGravity = false;
 		}
 	}
 

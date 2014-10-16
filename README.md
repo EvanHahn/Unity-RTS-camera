@@ -9,12 +9,19 @@ Attach this script to a camera and then you can use it RTS-style. A work in prog
 
 1. Attach this script to a camera.
 2. Add "Mouse Look" and "Mouse Select" to your inputs. I recommend changing the default Fire1 and Fire2 for left and right mouse buttons.
-3. For any selectable object, add the following code:
+3. Make sure selectable objects have 3D colliders on them.
+4. For any selectable object, add the following code:
 
    ```
    void OnTriggerEnter(Collider other) {
      if (other.gameObject.name == "RTS Selection") {
        // This object has been selected; do stuff!
+     }
+   }
+
+   void OnTriggerExit(Collider other) {
+     if (other.gameObject.name == "RTS Selection") {
+       // This object has been deselected; do stuff!
      }
    }
    ```
