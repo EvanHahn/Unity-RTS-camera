@@ -16,25 +16,30 @@ public class RTSCamera : MonoBehaviour {
 	public string onSelectMessageName = "OnRTSSelect";
 	
 	private readonly string[] INPUT_MOUSE_BUTTONS = {"Mouse Look", "Mouse Select"};
-	
+	private bool ready;
 	private bool[] isDragging = new bool[2];
 	private Vector3 selectStartPosition;
 	private Texture2D pixel;
 
 	void Start() {
-		if (!camera) {
-			throw new MissingComponentException("RTS Camera must be attached to a camera.");
+		try {
+			startupChecks();
+			setPixel(selectColor);
+			ready = true;
+		} catch (UnityException ex) {
+			ready = false;
 		}
-		setPixel(selectColor);
 	}
 	
 	void Update() {
+		if (!ready) { return; }
 		updateDragging();
 		updateLook();
 		updateZoom();
 	}
 
 	void OnGUI() {
+		if (!ready) { return; }
 		updateSelect();
 	}
 
@@ -97,6 +102,19 @@ public class RTSCamera : MonoBehaviour {
 		var result = Input.mousePosition;
 		result.y = Screen.height - result.y;
 		return result;
+	}
+
+	private void startupChecks() {
+		if (!camera) {
+			throw new MissingComponentException("RTS Camera must be attached to a camera.");
+		}
+		try {
+			Input.GetAxis(INPUT_MOUSE_BUTTONS[0]);
+			Input.GetAxis(INPUT_MOUSE_BUTTONS[1]);
+		} catch (UnityException ex) {
+			throw new UnassignedReferenceException("Inputs " + INPUT_MOUSE_BUTTONS[0] + " and " +
+			                                       INPUT_MOUSE_BUTTONS[1] + " must be defined.");
+		}
 	}
 
 }
