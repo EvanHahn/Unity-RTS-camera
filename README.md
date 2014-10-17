@@ -1,7 +1,9 @@
 RTS camera for Unity
 ====================
 
-Attach this script to a camera and then you can use it RTS-style. A work in progress.
+Attach this script to a camera and then you can use it RTS-style.
+
+![](http://www-personal.umich.edu/~evanhahn/494-p2-2/demo.gif)
 
 *Note: I'm a Unity newbie, so I'm sorry if I don't know what I'm doing! Happy to accept pull requests.*
 
