@@ -141,9 +141,9 @@ public class RTSCamera : MonoBehaviour {
 				(start.y + finish.y) / 2,
 				0.5f);
 			selection.transform.localScale = new Vector3(
-				Mathf.Abs(start.x - finish.x) / 2,
-				Mathf.Abs(start.y - finish.y) / 2,
-				0.5f);
+				Mathf.Abs(start.x - finish.x),
+				Mathf.Abs(start.y - finish.y),
+				1f);
 		}
 	}
 
