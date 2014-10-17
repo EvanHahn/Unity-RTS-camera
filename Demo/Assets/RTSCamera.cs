@@ -52,12 +52,12 @@ public class RTSCamera : MonoBehaviour {
 			if (isClicking(index) && !isDragging[index]) {
 				isDragging[index] = true;
 				if (index == 1) {
-					selectStartPosition = getMousePosition();
+					selectStartPosition = Input.mousePosition;
 				}
 			} else if (!isClicking(index) && isDragging[index]) {
 				isDragging[index] = false;
 				if (index == 1) {
-					dropSelection(selectStartPosition, getMousePosition());
+					dropSelection(selectStartPosition, Input.mousePosition);
 				}
 			}
 		}
@@ -74,10 +74,10 @@ public class RTSCamera : MonoBehaviour {
 
 	private void updateSelect() {
 		if (!isDragging[1] || disableSelect) { return; }
-		var x = selectStartPosition.x;
-		var y = selectStartPosition.y;
-		var width = getMousePosition().x - selectStartPosition.x;
-		var height = getMousePosition().y - selectStartPosition.y;
+		var x = camera.ScreenToViewportPoint(selectStartPosition).x;
+		var y = camera.ScreenToViewportPoint(selectStartPosition).x;
+		var width = camera.ScreenToViewportPoint(Input.mousePosition - selectStartPosition).x;
+		var height = camera.ScreenToViewportPoint(Input.mousePosition - selectStartPosition).y;
 		GUI.DrawTexture(new Rect(x, y, width, selectLineWidth), pixel);
 		GUI.DrawTexture(new Rect(x, y, selectLineWidth, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, selectLineWidth), pixel);
@@ -103,12 +103,6 @@ public class RTSCamera : MonoBehaviour {
 		pixel = new Texture2D(1, 1);
 		pixel.SetPixel(0, 0, color);
 		pixel.Apply();
-	}
-
-	private Vector3 getMousePosition() {
-		var result = Input.mousePosition;
-		result.y = Screen.height - result.y;
-		return result;
 	}
 
 	private void startupChecks() {
@@ -141,9 +135,21 @@ public class RTSCamera : MonoBehaviour {
 		}
 		{
 			var start = camera.ScreenToWorldPoint(screenStart -
-				new Vector3(0, -(Screen.height + screenStart.y), 0));
-			var finish = camera.ScreenToViewportPoint(screenEnd -
-				new Vector3(0, -(Screen.height + screenStart.y), 0));
+				new Vector3(0, screenStart.y, 0));
+			var finish = camera.ScreenToWorldPoint(screenEnd -
+				new Vector3(0, screenStart.y, 0));
+
+			{
+			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				cube.transform.position = start;
+				cube.transform.localScale = new Vector3(0.2f, 0.2f,0.2f);
+			}
+			{
+				var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				cube.transform.position = finish;
+				cube.transform.localScale = new Vector3(0.2f, 0.2f,0.2f);
+			}
+			/*
 			selection.transform.position = new Vector3(
 				Mathf.Min(start.x, finish.x),
 				Mathf.Min(start.y, finish.y),
@@ -152,6 +158,7 @@ public class RTSCamera : MonoBehaviour {
 				Mathf.Max(start.x, finish.x) - selection.transform.position.x,
 				Mathf.Max(start.y, finish.y) - selection.transform.position.y,
 				0.5f);
+			*/
 		}
 	}
 
