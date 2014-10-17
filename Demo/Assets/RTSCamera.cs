@@ -74,10 +74,10 @@ public class RTSCamera : MonoBehaviour {
 
 	private void updateSelect() {
 		if (!isDragging[1] || disableSelect) { return; }
-		var x = camera.ScreenToViewportPoint(selectStartPosition).x;
-		var y = camera.ScreenToViewportPoint(selectStartPosition).x;
-		var width = camera.ScreenToViewportPoint(Input.mousePosition - selectStartPosition).x;
-		var height = camera.ScreenToViewportPoint(Input.mousePosition - selectStartPosition).y;
+		var x = selectStartPosition.x;
+		var y = Screen.height - selectStartPosition.y;
+		var width = (Input.mousePosition - selectStartPosition).x;
+		var height = (Screen.height - Input.mousePosition.y) - y;
 		GUI.DrawTexture(new Rect(x, y, width, selectLineWidth), pixel);
 		GUI.DrawTexture(new Rect(x, y, selectLineWidth, height), pixel);
 		GUI.DrawTexture(new Rect(x, y + height, width, selectLineWidth), pixel);
