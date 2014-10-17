@@ -119,13 +119,13 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void dropSelection(Vector3 screenStart, Vector3 screenEnd) {
-		if (!selection && false) {
+		if (!selection) {
 			selection = new GameObject(selectionObjectName);
 			{
 				var collider = selection.AddComponent<BoxCollider>() as BoxCollider;
 				collider.isTrigger = true;
 				var size = collider.size;
-				size.z = 1000000f; // super friggin tall
+				size.z = 1000000f;  // super friggin tall
 				collider.size = size;
 			}
 			{
@@ -135,29 +135,15 @@ public class RTSCamera : MonoBehaviour {
 		}
 		{
 			var start = camera.ScreenToWorldPoint(screenStart);
-			start.z = 0;
 			var finish = camera.ScreenToWorldPoint(screenEnd);
-			finish.z = 0;
-			{
-				var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				cube.transform.position = start;
-				cube.transform.localScale = new Vector3(0.2f, 0.2f,0.2f);
-			}
-			{
-				var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				cube.transform.position = finish;
-				cube.transform.localScale = new Vector3(0.2f, 0.2f,0.2f);
-			}
-			/*
 			selection.transform.position = new Vector3(
-				Mathf.Min(start.x, finish.x),
-				Mathf.Min(start.y, finish.y),
+				(start.x + finish.x) / 2,
+				(start.y + finish.y) / 2,
 				0.5f);
 			selection.transform.localScale = new Vector3(
-				Mathf.Max(start.x, finish.x) - selection.transform.position.x,
-				Mathf.Max(start.y, finish.y) - selection.transform.position.y,
+				Mathf.Abs(start.x - finish.x) / 2,
+				Mathf.Abs(start.y - finish.y) / 2,
 				0.5f);
-			*/
 		}
 	}
 
