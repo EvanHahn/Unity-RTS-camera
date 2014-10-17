@@ -119,7 +119,7 @@ public class RTSCamera : MonoBehaviour {
 	}
 
 	private void dropSelection(Vector3 screenStart, Vector3 screenEnd) {
-		if (!selection) {
+		if (!selection && false) {
 			selection = new GameObject(selectionObjectName);
 			{
 				var collider = selection.AddComponent<BoxCollider>() as BoxCollider;
@@ -134,13 +134,12 @@ public class RTSCamera : MonoBehaviour {
 			}
 		}
 		{
-			var start = camera.ScreenToWorldPoint(screenStart -
-				new Vector3(0, screenStart.y, 0));
-			var finish = camera.ScreenToWorldPoint(screenEnd -
-				new Vector3(0, screenStart.y, 0));
-
+			var start = camera.ScreenToWorldPoint(screenStart);
+			start.z = 0;
+			var finish = camera.ScreenToWorldPoint(screenEnd);
+			finish.z = 0;
 			{
-			var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 				cube.transform.position = start;
 				cube.transform.localScale = new Vector3(0.2f, 0.2f,0.2f);
 			}
