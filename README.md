@@ -14,17 +14,17 @@ Attach this script to a camera and then you can use it RTS-style.
 3. Make sure selectable objects have 3D colliders on them.
 4. For any selectable object, add the following code:
 
-   ```
+   ```csharp
    void OnTriggerEnter(Collider other) {
-     if (other.gameObject.name == "RTS Selection") {
-       // This object has been selected; do stuff!
-     }
+      if (other.gameObject.name == "RTS Selection") {
+        // This object has been selected; do stuff!
+      }
    }
 
    void OnTriggerExit(Collider other) {
-     if (other.gameObject.name == "RTS Selection") {
-       // This object has been deselected; do stuff!
-     }
+      if (other.gameObject.name == "RTS Selection") {
+        // This object has been deselected; do stuff!
+      }
    }
    ```
 
